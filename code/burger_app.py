@@ -1,7 +1,6 @@
 #streamlit run code/burger_app.py
 import streamlit as st
 import pandas as pd
-
 df = pd.read_csv("data/Mcdelivery_menu_prices_Kacl.csv")
 df.columns = df.columns.str.strip()
 df['칼로리(Kcal)'] = pd.to_numeric(df['칼로리(Kcal)'], errors='coerce')
