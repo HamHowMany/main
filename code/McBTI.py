@@ -1,6 +1,6 @@
-#streamlit run code/MacBTI.py
+#streamlit run code/McBTI.py
 import streamlit as st
-st.set_page_config(page_title="🍔 나의 MacBTI는? 🍔", layout="centered")
+st.set_page_config(page_title="🍔 나의 McBTI는? 🍔", layout="centered")
 
 # 📆 시작 페이지 (인트로) 복사되는 화면)
 if "intro" not in st.session_state:
@@ -12,11 +12,11 @@ if 'answers' not in st.session_state:
 
 # 인트로 화면 보여주기
 if st.session_state.intro:
-    st.title("🍔 당신의 MacBTI는? 🍔")
+    st.title("🍔 당신의 McBTI는? 🍔")
     # ✅ 귀여운 햄버거 이미지 넣기 (이미지 경로는 저장 위치에 따라 조정!)
     st.image("data/burger.png", width=300, caption="당신을 기다리는 버거", use_column_width=False)
 
-    st.markdown("**Mac버거로 알아보는 나의 성격 유형!**<br><br>👇 아래 버튼을 눌러 시작해보세요!", unsafe_allow_html=True)
+    st.markdown("**Mc버거로 알아보는 나의 성격 유형!**<br><br>👇 아래 버튼을 눌러 시작해보세요!", unsafe_allow_html=True)
     cols = st.columns([1, 1, 1])  # 좌-중앙-우 나누기
     with cols[1]:
       if st.button("🔥 시작하기"):
