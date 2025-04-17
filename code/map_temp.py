@@ -9,10 +9,8 @@ from streamlit_folium import st_folium
 from geopy.distance import distance
 from geopy import Point
 from streamlit_geolocation import streamlit_geolocation
-import time
-import random
 
-# 🔐 환경 변수
+# 🔐 환경변수 불러오기
 load_dotenv()
 APP_ID = os.getenv("NUTRITIONIX_APP_ID")
 APP_KEY = os.getenv("NUTRITIONIX_APP_KEY")
@@ -26,31 +24,6 @@ if "location" not in st.session_state:
 if "menu_shown" not in st.session_state:
     st.session_state.menu_shown = False
 
-# 🎉 이모지 애니메이션
-def render_emoji_animation(emoji: str, count: int = 24):
-    style = """
-    <style>
-    .emoji-burst {
-        position: fixed;
-        z-index: 9999;
-        font-size: 30px;
-        animation: float 3s ease-in-out forwards;
-        pointer-events: none;
-    }
-    @keyframes float {
-        0% { opacity: 0; transform: translateY(100vh); }
-        30% { opacity: 1; }
-        100% { opacity: 0; transform: translateY(-100vh); }
-    }
-    </style>
-    """
-    emojis_html = ""
-    for _ in range(count):
-        side = random.choice(["left", "right"])
-        position = f"{side}: {random.randint(5, 45)}vw; top: {random.randint(20, 70)}vh;"
-        emojis_html += f"<div class='emoji-burst' style='{position}'>{emoji}</div>\n"
-    return style + emojis_html
-
 # 📦 데이터 로딩
 @st.cache_data
 def load_data():
@@ -62,7 +35,7 @@ def load_data():
     df['칼로리(Kcal)'] = pd.to_numeric(df['칼로리(Kcal)'], errors='coerce')
     return df.dropna(subset=['칼로리(Kcal)'])
 
-# 🔥 운동량 계산
+# 🔥 운동량 계산 API
 def get_burn_rate(query, profile):
     headers = {
         "x-app-id": APP_ID,
@@ -79,8 +52,21 @@ def get_burn_rate(query, profile):
             return kcal / minutes
     return None
 
-# 🖼️ UI 시작
-st.markdown("<h1 style='text-align: center;'>🍔 햄최몇? 칼로리 소모 여정 지도 🏃</h1>", unsafe_allow_html=True)
+# 🖼️ 앱 타이틀
+st.markdown(
+    """
+    <div style='text-align: center; line-height: 1.5; margin-top: 10px;'>
+        <span style='font-size: 40px;'>🍔</span>
+        <span style='font-size: 32px; font-weight: 800; margin: 0 6px;'>맥도날드 먹게되면!</span>
+        <span style='font-size: 40px;'>🍔</span><br>
+        <span style='font-size: 40px;'>🏃</span>
+        <span style='font-size: 32px; font-weight: 800; margin: 0 6px;'>어디까지 가야할까?</span>
+        <span style='font-size: 40px;'>🏃</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 
 # 👤 신체정보 입력
 with st.form("info_form"):
@@ -100,11 +86,10 @@ with st.form("info_form"):
             else:
                 st.warning("⚠️ 위치 정보를 가져오지 못했습니다.")
     with col2:
-        if st.form_submit_button("🎉 신체정보 입력 완료!"):
+        if st.form_submit_button("✅ 신체정보 입력 완료"):
             st.session_state.info_submitted = True
             st.session_state.menu_shown = True
-            st.success("👏👏👏 신체 정보 입력 완료! 👏👏👏")
-            st.markdown(render_emoji_animation("👏"), unsafe_allow_html=True)
+            st.success("신체 정보 입력이 완료되었습니다!")
 
 # 🍔 메뉴 선택
 if st.session_state.menu_shown:
@@ -117,21 +102,20 @@ if st.session_state.menu_shown:
 
     selected_items = []
     total_kcal = 0
-    for item, emoji in zip([burger, drink, side, dessert], ["🍔", "🥤", "🍟", "🍰"]):
+    for item in [burger, drink, side, dessert]:
         if item and item != "(선택 안 함)":
             row = df[df['메뉴'] == item]
             if not row.empty:
                 kcal = row.iloc[0]["칼로리(Kcal)"]
                 total_kcal += kcal
                 selected_items.append((item, kcal))
-                st.success(f"{emoji} {item} 선택 완료!")
-                st.markdown(render_emoji_animation(emoji), unsafe_allow_html=True)
+                st.success(f"✅ {item} 선택 완료!")
 
     # 🧭 방향 선택
     direction_map = {"북쪽 ⬆️": 0, "동쪽 ➡️": 90, "남쪽 ⬇️": 180, "서쪽 ⬅️": 270}
     bearing = direction_map[st.radio("📌 어느 방향으로 걸어볼까요?", list(direction_map.keys()), horizontal=True)]
 
-    # 🗺️ 경로 출력
+    # 🗺️ 지도 출력
     with st.expander("🗺️ 도보 경로 보기", expanded=False):
         exercise_map = {"걷기 🚶": ("walking", 5), "달리기 🏃": ("running", 10)}
         exercise_choice = st.selectbox("🔥 어떤 운동으로 소모할까요?", list(exercise_map.keys()))
