@@ -220,7 +220,7 @@ def main():
                 nutrients = recommended[['메뉴', '칼로리(Kcal)', '단백질', '지방']]
                 nutrients.set_index('메뉴', inplace=True)
 
-                fig2, ax2 = plt.subplots(figsize=(9,6))
+                fig2, ax2 = plt.subplots(figsize=(10,6))
                 nutrients.plot(kind='barh', ax=ax2)
 
                 ax2.set_xlabel("영양 성분 수치")
