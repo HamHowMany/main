@@ -1,4 +1,4 @@
-#streamlit run code/MacBTI.py
+#streamlit run code/MacBTI2.py
 import streamlit as st
 st.set_page_config(page_title="🍔 나의 MacBTI는? 🍔", layout="centered")
 
@@ -63,11 +63,14 @@ if 'answers' not in st.session_state:
 # 질문 페이지
 if st.session_state.page < len(questions):
     q = questions[st.session_state.page]
-    st.radio(q["question"], q["options"], key=f"q{st.session_state.page}")
-    if st.button("➡ 다음 질문"):
-        choice = st.session_state[f"q{st.session_state.page}"]
-        st.session_state.answers.append(choice)
-        st.session_state.page += 1
+     # ✅ 초기 선택 없음 (index=None)
+    selected = st.radio(q["question"], q["options"], key=f"q{st.session_state.page}", index=None)
+
+    # ✅ 선택된 경우에만 다음 버튼 활성화
+    if selected:
+        if st.button("➡ 다음 질문"):
+            st.session_state.answers.append(selected)
+            st.session_state.page += 1
 
 # 결과 페이지
 else:
@@ -110,33 +113,7 @@ else:
     st.markdown(f"## **{burger}**")
     st.markdown(f"**성격 유형:** {label}")
     st.markdown(f"**MBTI 유형:** {mbti}")
-   
-
-    # ✅ 정확한 방식으로 영양정보 가져오기
-    df['메뉴'] = df['메뉴'].str.strip()  # 공백 제거
-    try:
-        row = df.loc[df['메뉴'] == burger_results[mbti][0], ['칼로리(Kcal)', '단백질', '지방', '나트륨', '당류']]
-        if not row.empty:
-            values = row.iloc[0]
-            fig, ax = plt.subplots()
-            ax.bar(values.index, values.values, color="orange")
-            ax.set_title(f"{burger} 영양성분 분석", fontproperties=font_prop)
-            ax.set_ylabel("g / mg / kcal", fontproperties=font_prop)
-            ax.set_xticklabels(values.index, fontproperties=font_prop)
-            st.pyplot(fig)
-        else:
-            st.warning("⚠️ CSV에서 해당 버거의 영양정보를 찾을 수 없습니다.")
-    except Exception as e:
-        st.error(f"에러 발생: {e}")
-
-    # 다시하기 버튼
-    if st.button("🔄 다시 테스트하기"):
-        st.session_state.page = 0
-        st.session_state.answers = []
-        for i in range(len(questions)):
-            st.session_state.pop(f"q{i}", None)
-
-    # 🎈 떠다니는 버거 애니메이션
+   # 🎈 떠다니는 버거 애니메이션
     st.markdown("""
         <style>
     @keyframes floatBurger {
@@ -167,3 +144,38 @@ else:
     <div class="burger-float" style="left: 85%; top: 95%; animation-delay: 3s;">🍔🍟</div>
     <div class="burger-float" style="left: 95%; top: 92%; animation-delay: 4.5s;">🍟🍟</div>
      """, unsafe_allow_html=True)
+    
+
+    if st.button("🍽 영양성분 한 눈에 보기🍽"):
+        df['메뉴'] = df['메뉴'].str.strip()
+        menu_data = df[df['메뉴'] == burger]
+
+        st.dataframe(menu_data[['단백질', '지방', '나트륨', '당류']].rename(
+            columns={
+                '단백질': '단백질(g)',
+                '지방': '지방(g)',
+                '나트륨': '나트륨(mg)',
+                '당류': '당류(g)'
+            }
+        ), use_container_width=True, hide_index=True)
+
+        nutrition = menu_data[['단백질', '지방', '나트륨', '당류']].iloc[0]
+        korean_labels = ['단백질', '지방', '나트륨', '당류']
+
+        fig, ax = plt.subplots(figsize=(8, 8))
+        ax.pie(
+            nutrition.values,
+            labels=korean_labels,
+            autopct='%1.1f%%',
+            startangle=140,
+            textprops={'fontsize': 14}
+        )
+        ax.set_title(f"{burger}의 영양소 비율", fontsize=18, fontproperties=font_prop)
+        st.pyplot(fig)  
+
+    # 다시하기 버튼
+    if st.button("🔄 다시 테스트하기"):
+        st.session_state.page = 0
+        st.session_state.answers = []
+        for i in range(len(questions)):
+            st.session_state.pop(f"q{i}", None)
