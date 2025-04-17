@@ -1,8 +1,8 @@
 # main.py
-# streamlit run main.py
+# 실행: streamlit run main.py
 
 import streamlit as st
-from pages import visual, map_ui # ← 여기에서 map → map_ui 로 변경됨
+from pages import visual, map_ui, mbti  # ✅ MBTI 모듈 포함
 
 # ✅ 페이지 설정
 st.set_page_config(page_title="🍔 햄최몇", layout="centered")
@@ -11,9 +11,10 @@ st.set_page_config(page_title="🍔 햄최몇", layout="centered")
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-# ✅ 페이지 전환 함수
+# ✅ 페이지 전환 함수 (🔁 rerun 포함)
 def go_to(page_name):
     st.session_state.page = page_name
+    st.rerun()  # ✅ 버튼 두 번 누르는 문제 해결
 
 # ✅ 홈 화면
 def show_home():
@@ -24,6 +25,7 @@ def show_home():
         <br>
     """, unsafe_allow_html=True)
 
+    # ✅ 카드 스타일 정의
     card_css = """
         <style>
             .card {
@@ -59,6 +61,7 @@ def show_home():
     """
     st.markdown(card_css, unsafe_allow_html=True)
 
+    # ✅ 상단 두 개 카드
     col1, col2 = st.columns(2)
 
     with col1:
@@ -70,7 +73,6 @@ def show_home():
                 <div class="card-desc">메뉴 간 성분을 비교하고<br>마음에 드는 메뉴에 투표해보세요!</div>
             """, unsafe_allow_html=True)
 
-            # 👇 카드 내부에 버튼 넣기 (카드 중앙에 예쁘게 정렬됨)
             if st.button("✅ 시작하기", key="go_visual", use_container_width=True):
                 go_to("visual")
 
@@ -90,6 +92,22 @@ def show_home():
 
             st.markdown("</div>", unsafe_allow_html=True)
 
+    # ✅ 하단 MBTI 카드
+    st.markdown("<br>", unsafe_allow_html=True)
+    col_center, _ = st.columns([1, 1])
+    with col_center:
+        with st.container():
+            st.markdown("""
+            <div class="card">
+                <div class="card-icon">🧠</div>
+                <div class="card-title">MBTI 심리 테스트</div>
+                <div class="card-desc">버거로 알아보는<br>당신의 심리 유형!</div>
+            """, unsafe_allow_html=True)
+
+            if st.button("🔍 테스트하러 가기", key="go_mbti", use_container_width=True):
+                go_to("mbti")
+
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # ✅ 페이지 라우팅
 if st.session_state.page == "home":
@@ -97,4 +115,8 @@ if st.session_state.page == "home":
 elif st.session_state.page == "visual":
     visual.run()
 elif st.session_state.page == "map":
-    map_ui.run()  # ← map_ui.run() 호출
+    map_ui.run()
+elif st.session_state.page == "mbti":
+    mbti.run()
+    
+print("현재 페이지:", st.session_state.page)
