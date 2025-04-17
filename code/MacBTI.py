@@ -36,7 +36,7 @@ matplotlib.rc('font', family=font_prop.get_name())
 # CSV
 df = pd.read_csv("data/macbti.csv", encoding="utf-8")
 
-st.title("🍔 당신의 버거 성격유형을 알아보세요!")
+st.title("당신의 버거 성격유형을 알아보세요!")
 
 # MBTI 질문
 questions = [
@@ -106,10 +106,14 @@ else:
     burger = burger_results[mbti][0]
     label = burger_results[mbti][1]
 
-    st.subheader("🍔 당신에게 어울리는 버거는:")
-    st.markdown(f"## **{burger}**")
-    st.markdown(f"**성격 유형:** {label}")
-    st.markdown(f"**MBTI 유형:** {mbti}")
+    # st.subheader("🍔 당신에게 어울리는 버거는 🍔")
+    # st.markdown(f"## **{burger}**")
+    # st.markdown(f"**성격 유형:** {label}")
+    # st.markdown(f"**MBTI 유형:** {mbti}")
+    st.markdown("<h3 style='text-align: center;'>🍔 당신에게 어울리는 버거는 🍔</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='text-align: center;'><b>{burger}</b></h2>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'><b>성격 유형:</b> {label}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center;'><b>MBTI 유형:</b> {mbti}</p>", unsafe_allow_html=True)
 
     # ✅ 정확한 방식으로 영양정보 가져오기
     df['메뉴'] = df['메뉴'].str.strip()  # 공백 제거
