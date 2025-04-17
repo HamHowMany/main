@@ -2,7 +2,7 @@
 # 실행: streamlit run main.py
 
 import streamlit as st
-from pages import visual, map_ui, mbti  # ✅ MBTI 모듈 포함
+from pages import visual, map_ui, mbti, specialty  # ✅ specialty 추가
 
 # ✅ 페이지 설정
 st.set_page_config(page_title="🍔 햄최몇", layout="centered")
@@ -19,8 +19,8 @@ def go_to(page_name):
 # ✅ 홈 화면
 def show_home():
     st.markdown("""
-        <h1 style='text-align: center; font-size: 48px;'>🍔 햄최몇?</h1>
-        <h3 style='text-align: center;'>햄버거... 최대 몇 개까지 괜찮을까? 🤯</h3>
+        <h1 style='text-align: center; font-size: 48px;'>🍔 햄최몇? 🍔</h1>
+        <h3 style='text-align: center;'>햄버거 최대 몇 개까지 괜찮을까?</h3>
         <p style='text-align: center; font-size: 16px;'>원하는 기능을 아래 카드에서 선택해보세요!</p>
         <br>
     """, unsafe_allow_html=True)
@@ -92,20 +92,35 @@ def show_home():
 
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # ✅ 하단 MBTI 카드
+    # ✅ 하단 두 개 카드 (MBTI, 영양 기준 추천)
     st.markdown("<br>", unsafe_allow_html=True)
-    col_center, _ = st.columns([1, 1])
-    with col_center:
+    col3, col4 = st.columns(2)
+
+    with col3:
         with st.container():
             st.markdown("""
             <div class="card">
                 <div class="card-icon">🧠</div>
-                <div class="card-title">MBTI 심리 테스트</div>
+                <div class="card-title">McBTI 심리 테스트</div>
                 <div class="card-desc">버거로 알아보는<br>당신의 심리 유형!</div>
             """, unsafe_allow_html=True)
 
             if st.button("🔍 테스트하러 가기", key="go_mbti", use_container_width=True):
                 go_to("mbti")
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+    with col4:
+        with st.container():
+            st.markdown("""
+            <div class="card">
+                <div class="card-icon">🍽️</div>
+                <div class="card-title">영양 기준 추천</div>
+                <div class="card-desc">선호하는 영양 기준에 따라<br>메뉴를 추천받아보세요!</div>
+            """, unsafe_allow_html=True)
+
+            if st.button("🍴 추천받기", key="go_specialty", use_container_width=True):
+                go_to("specialty")
 
             st.markdown("</div>", unsafe_allow_html=True)
 
@@ -118,5 +133,7 @@ elif st.session_state.page == "map":
     map_ui.run()
 elif st.session_state.page == "mbti":
     mbti.run()
-    
+elif st.session_state.page == "specialty":
+    specialty.run()
+
 print("현재 페이지:", st.session_state.page)
