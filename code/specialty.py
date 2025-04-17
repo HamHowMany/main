@@ -7,9 +7,6 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import os
 
-
-
-
 # 데이터 로드 함수
 def load_data():
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
