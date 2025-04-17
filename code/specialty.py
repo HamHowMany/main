@@ -9,7 +9,7 @@ import streamlit as st
 def load_data():
     try:
         # 영양 정보 데이터 로드 (파일명이 잘려서 정확한 이름을 확인해야 합니다)
-        nutrition_df = pd.read_excel("McDelivery Nutritional Information Ta....xlsx")  # 확장자 수정 필요
+        nutrition_df = pd.read_excel("McDelivery Nutritional Information Table.xlsx")  # 확장자 수정 필요
     except:
         nutrition_df = pd.read_csv("McDelivery Nutritional Information Table.csv")  # CSV 버전 시도
     
