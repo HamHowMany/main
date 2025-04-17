@@ -106,14 +106,11 @@ else:
     burger = burger_results[mbti][0]
     label = burger_results[mbti][1]
 
-    # st.subheader("🍔 당신에게 어울리는 버거는 🍔")
-    # st.markdown(f"## **{burger}**")
-    # st.markdown(f"**성격 유형:** {label}")
-    # st.markdown(f"**MBTI 유형:** {mbti}")
-    st.markdown("<h3 style='text-align: center;'>🍔 당신에게 어울리는 버거는 🍔</h3>", unsafe_allow_html=True)
-    st.markdown(f"<h2 style='text-align: center;'><b>{burger}</b></h2>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'><b>성격 유형:</b> {label}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center;'><b>MBTI 유형:</b> {mbti}</p>", unsafe_allow_html=True)
+    st.subheader("🍔 당신에게 어울리는 버거는 🍔")
+    st.markdown(f"## **{burger}**")
+    st.markdown(f"**성격 유형:** {label}")
+    st.markdown(f"**MBTI 유형:** {mbti}")
+   
 
     # ✅ 정확한 방식으로 영양정보 가져오기
     df['메뉴'] = df['메뉴'].str.strip()  # 공백 제거
