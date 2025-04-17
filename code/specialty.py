@@ -15,7 +15,7 @@ def load_data():
             BASE_DIR, "..", "data", "McDelivery Nutritional Information Table.csv"
         )
     )
-
+    
     try:
         df = pd.read_csv(DATA_PATH)
         df.columns = df.columns.str.strip()  # 공백 제거
@@ -30,8 +30,7 @@ def load_data():
 
 # 추천 함수 (한글 컬럼명 사용)
 def recommend_menu(df, preferences):
-    
-    
+      
     # 먼저 필터링을 수행
     filtered_df = df[
         (df["칼로리(Kcal)"] >= preferences["min_calories"])
