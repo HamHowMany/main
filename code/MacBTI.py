@@ -1,4 +1,4 @@
-#streamlit run code/MacBTI2.py
+#streamlit run code/MacBTI.py
 import streamlit as st
 st.set_page_config(page_title="🍔 나의 MacBTI는? 🍔", layout="centered")
 
