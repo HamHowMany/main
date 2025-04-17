@@ -85,22 +85,22 @@ else:
 
     # 버거 매핑
     burger_results = {
-        "INTJ": ("더블 1955 버거", "전략적 완벽주의자"),
-        "INTP": ("트리플 치즈버거", "논리적인 탐구자"),
-        "ENTJ": ("쿼터파운더 치즈", "지도력 있는 개척자"),
-        "ENTP": ("슈비버거", "창의적인 혁신가"),
-        "INFJ": ("토마토 치즈 비프버거", "이상주의적 조율가"),
-        "INFP": ("불고기 버거", "감성적인 이상주의자"),
-        "ENFJ": ("빅맥", "사교적 조화주의자"),
-        "ENFP": ("맥스파이시 상하이 버거", "열정 가득한 활동가"),
-        "ISTJ": ("맥치킨", "신중한 책임감쟁이"),
-        "ISFJ": ("슈슈버거", "따뜻한 헌신가"),
-        "ESTJ": ("더블 치즈버거", "실용적 리더"),  # 대체: 트리플 베이컨 치즈버거 → 더블 치즈버거
-        "ESFJ": ("맥크리스피 클래식 버거", "친화적인 관리자"),
-        "ISTP": ("더블 불고기 버거", "과묵한 해결사"),
-        "ISFP": ("치즈버거", "부드러운 감성가"),
-        "ESTP": ("맥크리스피 디럭스 버거", "자유로운 행동가"),
-        "ESFP": ("더블 맥스파이시 상하이 버거", "분위기 메이커")
+        "INTJ": ("더블 1955 버거", "계획 세우다 하루 다 감"),
+        "INTP": ("트리플 치즈버거", "뇌는 바쁨, 몸은 침대에 붙어있음"),
+        "ENTJ": ("쿼터파운더 치즈", "사장병 있음 (본인도 인정함)"),
+        "ENTP": ("슈비 버거", "시작은 잘함, 끝은 모르겠음"),
+        "INFJ": ("토마토 치즈 비프 버거", "내가 왜 이렇게 피곤하지...?"),
+        "INFP": ("불고기 버거", "혼자 영화 보고 울고, 다시 보고 또 울고"),
+        "ENFJ": ("빅맥", "다 괜찮다고 하면서 본인이 제일 힘듦"),
+        "ENFP": ("맥스파이시 상하이 버거", "인생은 즉흥! 계획은 없어도 감성은 있음"),
+        "ISTJ": ("맥치킨", "정리 안 돼 있으면 잠 못 잠"),
+        "ISFJ": ("슈슈 버거", "남 챙기느라 본인 밥 식는 사람"),
+        "ESTJ": ("더블 치즈버거", "이건 이렇게 해야 합니다 (강조함)"),  # 대체: 트리플 베이컨 치즈버거 → 더블 치즈버거
+        "ESFJ": ("맥크리스피 클래식 버거", "친구 문제도 본인이 더 속상함"),
+        "ISTP": ("더블 불고기 버거", "가만히 있다가 기계 다 고침"),
+        "ISFP": ("치즈버거", "감성사진 폴더에만 3천장 있음"),
+        "ESTP": ("맥크리스피 디럭스 버거", "지금 안 하면 죽을 것 같음"),
+        "ESFP": ("더블 맥스파이시 상하이 버거", "나 지금 심심해 죽을 것 같음 ㅠㅠ")
     }
 
     burger = burger_results[mbti][0]
@@ -157,13 +157,13 @@ else:
     </style>
 
     <div class="burger-float" style="left: 5%; top: 90%; animation-delay: 0s;">🍟🍔</div>
-    <div class="burger-float" style="left: 15%; top: 92%; animation-delay: 0.5s;">🍔🍔</div>
-    <div class="burger-float" style="left: 25%; top: 95%; animation-delay: 1s;">🍟🍟</div>
+    <div class="burger-float" style="left: 15%; top: 92%; animation-delay: 1.3s;">🍔🍔</div>
+    <div class="burger-float" style="left: 25%; top: 95%; animation-delay: 2s;">🍟🍟</div>
     <div class="burger-float" style="left: 35%; top: 91%; animation-delay: 1.5s;">🍔🍔</div>
-    <div class="burger-float" style="left: 45%; top: 93%; animation-delay: 2s;">🍟🍔</div>
+    <div class="burger-float" style="left: 45%; top: 93%; animation-delay: 0.5s;">🍟🍔</div>
     <div class="burger-float" style="left: 55%; top: 90%; animation-delay: 2.5s;">🍔🍟</div>
-    <div class="burger-float" style="left: 65%; top: 94%; animation-delay: 3s;">🍟🍔</div>
+    <div class="burger-float" style="left: 65%; top: 94%; animation-delay: 2s;">🍟🍔</div>
     <div class="burger-float" style="left: 75%; top: 91%; animation-delay: 3.5s;">🍔🍔</div>
-    <div class="burger-float" style="left: 85%; top: 95%; animation-delay: 4s;">🍔🍟</div>
+    <div class="burger-float" style="left: 85%; top: 95%; animation-delay: 3s;">🍔🍟</div>
     <div class="burger-float" style="left: 95%; top: 92%; animation-delay: 4.5s;">🍟🍟</div>
      """, unsafe_allow_html=True)
