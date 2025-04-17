@@ -12,7 +12,7 @@ APP_KEY = os.getenv("NUTRITIONIX_APP_KEY")
 # 데이터 불러오기
 @st.cache_data
 def load_data():
-    df = pd.read_csv("../../data/Mcdelivery_menu_prices_Kacl.csv")
+    df = pd.read_csv("../../data/Mcdelivery.csv")
     df['가격'] = df['가격'].astype(str).str.replace(",", "").astype(int)
     df['칼로리(Kcal)'] = df['칼로리(Kcal)'].astype(str).str.replace(r"[^\d.]", "", regex=True)
     df['칼로리(Kcal)'] = pd.to_numeric(df['칼로리(Kcal)'], errors='coerce')
