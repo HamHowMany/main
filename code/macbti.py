@@ -104,7 +104,7 @@ def run():
     # CSV 로딩 및 추천
     try:
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # code/ 기준
-        DATA_PATH = os.path.join(BASE_DIR, "..", "data", "McDelivery Nutritional Information Table.csv")
+        DATA_PATH = ospath.join(BASE_DIR, "..", "data", "McDelivery Nutritional Information Table.csv").
         DATA_PATH = os.path.abspath(DATA_PATH)  # 윈도우 경로 정리용
         df = pd.read_csv(DATA_PATH)
 
