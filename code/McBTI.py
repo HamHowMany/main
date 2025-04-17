@@ -34,7 +34,7 @@ font_prop = fm.FontProperties(fname=font_path)
 matplotlib.rc('font', family=font_prop.get_name())
 
 # CSV
-df = pd.read_csv("data/macbti.csv", encoding="utf-8")
+df = pd.read_csv("data/mcbti.csv", encoding="utf-8")
 
 st.title("당신의 버거 성격유형을 알아보세요!")
 
