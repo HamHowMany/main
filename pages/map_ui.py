@@ -1,4 +1,4 @@
-# streamlit run code/map_temp.py
+# streamlit run code/map.py
 import streamlit as st
 import pandas as pd
 import requests
