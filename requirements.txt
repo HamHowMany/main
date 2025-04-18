@@ -9,3 +9,5 @@ scikit_learn==1.6.1
 streamlit==1.37.1
 streamlit_folium==0.24.1
 streamlit_geolocation==0.0.10
+gspread
+oauth2client
