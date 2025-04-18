@@ -15,20 +15,20 @@ SHEET_NAME = "google_vote_result"
 # ✅ Google Sheets 연결
 @st.cache_resource
 def get_gsheet():
-    import json
+    # Streamlit Cloud 또는 .env 기반 자동 처리
+    if "GOOGLE_SERVICE_ACCOUNT" in st.secrets:
+        info = json.loads(st.secrets["GOOGLE_SERVICE_ACCOUNT"])
+    else:
+        from dotenv import load_dotenv
+        load_dotenv()
+        with open(os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON"), "r", encoding="utf-8") as f:
+            info = json.load(f)
 
-    # ✅ Streamlit Cloud에서는 st.secrets 사용
-    if "GOOGLE_SERVICE_ACCOUNT" not in st.secrets:
-        raise FileNotFoundError("Streamlit secrets.toml에 GOOGLE_SERVICE_ACCOUNT 키가 없습니다.")
-
-    info = json.loads(st.secrets["GOOGLE_SERVICE_ACCOUNT"])
-
-    SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-    credentials = service_account.Credentials.from_service_account_info(info, scopes=SCOPE)
+    scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
+    credentials = service_account.Credentials.from_service_account_info(info, scopes=scopes)
 
     gc = gspread.authorize(credentials)
-    sheet = gc.open("google_vote_result").sheet1
-    return sheet
+    return gc.open("google_vote_result").sheet1
 
 # ✅ 폰트 설정
 def setup_fonts():
