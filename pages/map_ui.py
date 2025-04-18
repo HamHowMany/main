@@ -16,43 +16,17 @@ import matplotlib.font_manager as fm
 
 # setup_fonts 함수 수정
 def setup_fonts():
-    system = platform.system()
-    font_path = None
-
-    # ✅ 1순위: 프로젝트 내 포함된 NanumGothic
     base_dir = os.path.dirname(os.path.abspath(__file__))
     local_font_path = os.path.join(base_dir, "assets", "fonts", "NanumGothic.ttf")
-    st.write("🔍 현재 파일 위치:", base_dir)
 
     if os.path.exists(local_font_path):
-        font_path = local_font_path
-        st.success(f"✅ 로컬 NanumGothic.ttf 사용: {font_path}")
-    else:
-        # ✅ 2순위: 시스템 폰트 fallback
-        if system == "Windows":
-            font_path = "C:\\Windows\\Fonts\\malgun.ttf"
-        elif system == "Darwin":
-            font_path = "/System/Library/Fonts/AppleGothic.ttf"
-        else:
-            font_path_candidates = [
-                "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",
-                "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
-                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-            ]
-            for path in font_path_candidates:
-                if os.path.exists(path):
-                    font_path = path
-                    st.success(f"✅ 시스템 폰트 사용: {font_path}")
-                    break
-
-    if font_path and os.path.exists(font_path):
-        font_prop = fm.FontProperties(fname=font_path)
-        plt.rc("font", family=font_prop.get_name())
+        fm.fontManager.addfont(local_font_path)
+        nanum_font = fm.FontProperties(fname=local_font_path)
+        plt.rcParams['font.family'] = nanum_font.get_name()
         plt.rcParams["axes.unicode_minus"] = False
-        st.write(f"🎉 적용된 폰트 이름: `{font_prop.get_name()}`")
+        print(f"✅ matplotlib에 폰트 직접 등록: {nanum_font.get_name()}")
     else:
-        st.warning("❌ 폰트 설정 실패: 기본 폰트 사용 중")
-
+        print("❌ NanumGothic.ttf 경로를 찾을 수 없습니다.")
 def run():
     setup_fonts()  # ✅ 한글 폰트 깨짐 방지
     # 🔐 환경변수 불러오기
