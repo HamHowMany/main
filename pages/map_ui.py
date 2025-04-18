@@ -20,10 +20,13 @@ def setup_fonts():
     font_path = None
 
     # ✅ 1순위: 프로젝트 내 포함된 NanumGothic
-    local_font_path = os.path.join(os.path.dirname(__file__), "assets", "fonts", "NanumGothic.ttf")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    local_font_path = os.path.join(base_dir, "assets", "fonts", "NanumGothic.ttf")
+    st.write("🔍 현재 파일 위치:", base_dir)
+
     if os.path.exists(local_font_path):
         font_path = local_font_path
-        print("✅ 로컬 NanumGothic.ttf 사용")
+        st.success(f"✅ 로컬 NanumGothic.ttf 사용: {font_path}")
     else:
         # ✅ 2순위: 시스템 폰트 fallback
         if system == "Windows":
@@ -39,17 +42,16 @@ def setup_fonts():
             for path in font_path_candidates:
                 if os.path.exists(path):
                     font_path = path
-                    print(f"✅ 시스템 폰트 사용: {font_path}")
+                    st.success(f"✅ 시스템 폰트 사용: {font_path}")
                     break
 
     if font_path and os.path.exists(font_path):
         font_prop = fm.FontProperties(fname=font_path)
         plt.rc("font", family=font_prop.get_name())
-        print(f"🎉 적용된 폰트: {font_prop.get_name()}")
+        plt.rcParams["axes.unicode_minus"] = False
+        st.write(f"🎉 적용된 폰트 이름: `{font_prop.get_name()}`")
     else:
-        print("❌ 폰트 설정 실패: 기본 폰트 사용 중")
-
-    plt.rcParams["axes.unicode_minus"] = False
+        st.warning("❌ 폰트 설정 실패: 기본 폰트 사용 중")
 
 def run():
     setup_fonts()  # ✅ 한글 폰트 깨짐 방지
