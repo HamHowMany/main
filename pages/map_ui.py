@@ -10,8 +10,30 @@ from streamlit_folium import st_folium
 from geopy.distance import distance
 from geopy import Point
 from streamlit_geolocation import streamlit_geolocation
+import platform
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+def setup_fonts():
+    """운영체제별로 안전한 한글 폰트 설정"""
+    system = platform.system()
+    if system == "Windows":
+        font_path = "C:\\Windows\\Fonts\\malgun.ttf"
+    elif system == "Darwin":
+        font_path = "/System/Library/Fonts/AppleGothic.ttf"
+    else:  # Linux (Streamlit Cloud 포함)
+        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+
+    if os.path.exists(font_path):
+        prop = fm.FontProperties(fname=font_path)
+        plt.rc("font", family=prop.get_name())
+    else:
+        print(f"⚠️ 폰트 파일이 존재하지 않음: {font_path}")
+
+    plt.rcParams["axes.unicode_minus"] = False
 
 def run():
+    setup_fonts()  # ✅ 한글 폰트 깨짐 방지
     # 🔐 환경변수 불러오기
     load_dotenv()
     APP_ID = os.getenv("NUTRITIONIX_APP_ID")

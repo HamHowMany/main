@@ -1,29 +1,57 @@
 # main.py
 # streamlit run main.py
-
 import streamlit as st
+# ✅ 페이지 설정 + 사이드바 숨기기
+st.set_page_config(
+    page_title="🍔 햄최몇",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
 
-# 페이지 설정
-st.set_page_config(page_title="🍔 햄최몇", layout="centered")
-
+import os
+import platform
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 from pages import visual, map_ui, mbti, specialty
 
+# ✅ 한글 폰트 설정
+def setup_fonts():
+    system = platform.system()
+    if system == "Windows":
+        font_path = "C:\\Windows\\Fonts\\malgun.ttf"
+    elif system == "Darwin":
+        font_path = "/System/Library/Fonts/AppleGothic.ttf"
+    else:
+        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+
+    if os.path.exists(font_path):
+        prop = fm.FontProperties(fname=font_path)
+        plt.rc("font", family=prop.get_name())
+    else:
+        print(f"⚠️ 폰트 경로가 존재하지 않음: {font_path}")
+
+    plt.rcParams["axes.unicode_minus"] = False
+
+# ✅ 사이드바 자체 숨기기 (Streamlit 기본 탐색 제거)
+st.markdown("""
+    <style>
+    [data-testid="stSidebarNav"] { display: none; }
+    </style>
+""", unsafe_allow_html=True)
+
+# ✅ 세션 상태 초기화
 if "page" not in st.session_state:
     st.session_state.page = "home"
 
-def go_to(page_name: str):
-    st.session_state.page = page_name
-    st.rerun()
-
-# 카드 정의
+# ✅ 카드 UI 정의
 CARD_DEFINITIONS = [
-    {"icon":"📊","title":"영양 성분 비교 & 투표","desc":"메뉴 간 성분을 비교하고<br>마음에 드는 메뉴에 투표해보세요!","button":"🚀시작하기","key":"go_visual","target":"visual"},
-    {"icon":"🏃","title":"칼로리 소모 지도","desc":"먹은 칼로리를 운동으로<br>얼마나 소모해야 하는지 확인해보세요!","button":"⚙️실행하기","key":"go_map","target":"map"},
-    {"icon":"🧠","title":"McBTI 심리 테스트","desc":"버거로 알아보는<br>당신의 심리 유형!","button":"📝테스트하러 가기","key":"go_mbti","target":"mbti"},
-    {"icon":"🍽️","title":"영양 기준 추천","desc":"선호하는 영양 기준에 따라<br>메뉴를 추천받아보세요!","button":"👍추천받기","key":"go_specialty","target":"specialty"},
+    {"icon":"📊","title":"영양 성분 비교 & 투표","desc":"메뉴 간 성분을 비교하고<br>마음에 드는 메뉴에 투표해보세요!","button":"🚀 시작하기","key":"go_visual","target":"visual"},
+    {"icon":"🏃","title":"칼로리 소모 지도","desc":"먹은 칼로리를 운동으로<br>얼마나 소모해야 하는지 확인해보세요!","button":"⚙️ 실행하기","key":"go_map","target":"map"},
+    {"icon":"🧠","title":"McBTI 심리 테스트","desc":"버거로 알아보는<br>당신의 심리 유형!","button":"📝 테스트하러 가기","key":"go_mbti","target":"mbti"},
+    {"icon":"🍽️","title":"영양 기준 추천","desc":"선호하는 영양 기준에 따라<br>메뉴를 추천받아보세요!","button":"👍 추천받기","key":"go_specialty","target":"specialty"},
 ]
 
-# 여기에 spacing 조절용 CSS 추가
+# ✅ 카드 스타일
 st.markdown("""
 <style>
 .card {
@@ -34,7 +62,6 @@ st.markdown("""
     text-align: center;
     transition: transform 0.2s ease-in-out;
     border: 2px solid transparent;
-    /* 카드들 간의 세로 간격을 넉넉히 */
     margin-bottom: 32px;
     height: 200px;
 }
@@ -56,13 +83,18 @@ st.markdown("""
     margin-bottom: 12px;
     color: var(--text-secondary);
 }
-/* 버튼 위쪽에 여백을 줘서 카드 본문과 분리 */
 .card-button {
     margin-top: 16px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
+# ✅ 이동 함수
+def go_to(page_name: str):
+    st.session_state.page = page_name
+    st.rerun()
+
+# ✅ 홈 화면
 def show_home():
     st.markdown("""
     <h1 style="text-align:center; font-size:48px;">🍔 햄최몇? 🍔</h1>
@@ -79,12 +111,13 @@ def show_home():
                   <div class="card-title">{card['title']}</div>
                   <div class="card-desc">{card['desc']}</div>
             """, unsafe_allow_html=True)
-            # use_container_width=True 로 버튼도 카드 안에서 풀폭을 유지
-            if st.button(card["button"], key=card["key"], use_container_width=True, args=None):
+            if st.button(card["button"], key=card["key"], use_container_width=True):
                 go_to(card["target"])
             st.markdown("</div>", unsafe_allow_html=True)
 
+# ✅ 메인 실행 함수
 def main():
+    setup_fonts()
     if st.session_state.page == "home":
         show_home()
     elif st.session_state.page == "visual":

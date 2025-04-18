@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
+import matplotlib.font_manager as fm
 
 # ─────────────────────────────────────────────────────
 # 전역 CSS: 카드 hover 효과 + nutrient-text 스타일
@@ -82,15 +83,23 @@ STYLE = {
 # ─────────────────────────────────────────────────────
 
 def setup_fonts():
-    """시스템에 맞춰 한글 폰트 설정"""
+    """운영체제별로 한글 폰트 안전하게 설정"""
     system = platform.system()
-    font = (
-        "Malgun Gothic" if system == "Windows" else
-        "AppleGothic"   if system == "Darwin"  else
-        "NanumGothic"
-    )
-    plt.rcParams["font.family"]         = font
-    plt.rcParams["axes.unicode_minus"]  = False
+    if system == "Windows":
+        font_path = "C:\\Windows\\Fonts\\malgun.ttf"
+    elif system == "Darwin":
+        font_path = "/System/Library/Fonts/AppleGothic.ttf"
+    else:  # Linux (Streamlit Cloud 포함)
+        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+
+    if os.path.exists(font_path):
+        font_prop = fm.FontProperties(fname=font_path)
+        plt.rcParams["font.family"] = font_prop.get_name()
+    else:
+        print(f"⚠️ 경고: 지정된 폰트 경로 없음 → {font_path}")
+
+    plt.rcParams["axes.unicode_minus"] = False
+
 
 @st.cache_data
 def load_data() -> pd.DataFrame:
