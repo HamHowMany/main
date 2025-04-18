@@ -18,12 +18,20 @@ SPREADSHEET_URL = "https://docs.google.com/spreadsheets/d/YOUR_SPREADSHEET_ID/ed
 # ✅ 서비스 계정 인증
 @st.cache_resource
 def get_gsheet():
-    credentials = service_account.Credentials.from_service_account_file(
-        os.path.join(os.path.dirname(__file__), "..", "secrets", "google_service_account.json"),
-        scopes=SCOPE
-    )
-    client = gspread.authorize(credentials)
-    sheet = client.open_by_url(SPREADSHEET_URL).worksheet(SHEET_NAME)
+    import json
+
+    # 1. 비밀키를 secrets.toml에서 가져옴
+    json_str = st.secrets["GOOGLE_SERVICE_ACCOUNT"]
+    info = json.loads(json_str)
+
+    # 2. 자격증명 객체 생성
+    credentials = service_account.Credentials.from_service_account_info(info)
+    
+    # 3. gspread 클라이언트 초기화
+    gc = gspread.authorize(credentials)
+
+    # 4. 시트 접근
+    sheet = gc.open("google_vote_result").sheet1
     return sheet
 
 # ✅ 폰트 설정
