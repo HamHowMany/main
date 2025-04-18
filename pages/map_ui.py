@@ -15,22 +15,32 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 def setup_fonts():
+    """운영체제별로 폰트를 안전하게 설정하고, 한글 깨짐 방지"""
+    font_path = None
     system = platform.system()
+
     if system == "Windows":
         font_path = "C:\\Windows\\Fonts\\malgun.ttf"
     elif system == "Darwin":
         font_path = "/System/Library/Fonts/AppleGothic.ttf"
     else:
-        # ✅ Linux (Streamlit Cloud) 환경에는 NanumGothic 또는 DejaVuSans 사용
-        font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
-        if not os.path.exists(font_path):
-            font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+        # ✅ Linux (Streamlit Cloud 포함)
+        candidates = [
+            "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",
+            "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+        ]
+        for path in candidates:
+            if os.path.exists(path):
+                font_path = path
+                break
 
-    if os.path.exists(font_path):
+    if font_path and os.path.exists(font_path):
         prop = fm.FontProperties(fname=font_path)
         plt.rc("font", family=prop.get_name())
+        print(f"✅ 한글 폰트 적용됨: {prop.get_name()} ({font_path})")
     else:
-        print("⚠️ 시스템 폰트를 찾을 수 없습니다. 기본 설정을 사용합니다.")
+        print("⚠️ 시스템에서 한글 폰트를 찾을 수 없습니다. 기본 설정을 사용합니다.")
 
     plt.rcParams["axes.unicode_minus"] = False
 
