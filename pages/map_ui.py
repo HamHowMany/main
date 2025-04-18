@@ -15,20 +15,22 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
 def setup_fonts():
-    """운영체제별로 안전한 한글 폰트 설정"""
     system = platform.system()
     if system == "Windows":
         font_path = "C:\\Windows\\Fonts\\malgun.ttf"
     elif system == "Darwin":
         font_path = "/System/Library/Fonts/AppleGothic.ttf"
-    else:  # Linux (Streamlit Cloud 포함)
-        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    else:
+        # ✅ Linux (Streamlit Cloud) 환경에는 NanumGothic 또는 DejaVuSans 사용
+        font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
+        if not os.path.exists(font_path):
+            font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
     if os.path.exists(font_path):
         prop = fm.FontProperties(fname=font_path)
         plt.rc("font", family=prop.get_name())
     else:
-        print(f"⚠️ 폰트 파일이 존재하지 않음: {font_path}")
+        print("⚠️ 시스템 폰트를 찾을 수 없습니다. 기본 설정을 사용합니다.")
 
     plt.rcParams["axes.unicode_minus"] = False
 
