@@ -3,11 +3,28 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import platform  # ✅ 추가
+import matplotlib.font_manager as fm
+
+def setup_fonts():
+    system = platform.system()
+    if system == "Windows":
+        font_path = "C:\\Windows\\Fonts\\malgun.ttf"
+    elif system == "Darwin":
+        font_path = "/System/Library/Fonts/AppleGothic.ttf"
+    else:  # Linux (예: Streamlit Cloud)
+        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+
+    if os.path.exists(font_path):
+        font_prop = fm.FontProperties(fname=font_path)
+        plt.rcParams["font.family"] = font_prop.get_name()
+    else:
+        print(f"⚠️ 폰트 파일이 존재하지 않아 기본 폰트로 진행합니다: {font_path}")
+
+    plt.rcParams["axes.unicode_minus"] = False
 
 def run():
-    # ✅ 폰트 설정 (한글 깨짐 방지)
-    plt.rcParams['font.family'] = 'Malgun Gothic'
-    plt.rcParams['axes.unicode_minus'] = False
+    setup_fonts()  # ✅ 여기에 호출 추가
 
     # ✅ 경로 설정
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))

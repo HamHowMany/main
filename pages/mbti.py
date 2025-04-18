@@ -2,11 +2,26 @@ import os
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import platform
+
 
 def setup_fonts():
-    font_path = "C:\\Windows\\Fonts\\malgun.ttf"
-    prop = fm.FontProperties(fname=font_path)
-    plt.rc("font", family=prop.get_name())
+    """운영체제별로 안전한 한글 폰트 설정"""
+    system = platform.system()
+    if system == "Windows":
+        font_path = "C:\\Windows\\Fonts\\malgun.ttf"
+    elif system == "Darwin":
+        font_path = "/System/Library/Fonts/AppleGothic.ttf"
+    else:  # Linux (ex: Streamlit Cloud)
+        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+
+    if os.path.exists(font_path):
+        prop = fm.FontProperties(fname=font_path)
+        plt.rc("font", family=prop.get_name())
+    else:
+        print(f"⚠️ 폰트 파일을 찾을 수 없습니다: {font_path}")
+
+    plt.rcParams["axes.unicode_minus"] = False
 
 def inject_css():
     st.markdown(
