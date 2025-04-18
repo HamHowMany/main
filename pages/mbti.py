@@ -16,13 +16,13 @@ def run():
     font_prop = fm.FontProperties(fname=font_path)
     matplotlib.rc('font', family=font_prop.get_name())
 
-    # ✅ MBTI 상태 변수 따로 관리
+    # ✅ MBTI 상태 변수 초기화
     if "mbti_page" not in st.session_state:
         st.session_state.mbti_page = "intro"
     if "answers" not in st.session_state:
         st.session_state.answers = []
 
-    # ✅ 카드 CSS 정의
+    # ✅ 카드 스타일 정의
     st.markdown("""
         <style>
         .option-card {
@@ -45,7 +45,7 @@ def run():
         </style>
     """, unsafe_allow_html=True)
 
-    # ✅ 1. 인트로 페이지
+    # ✅ 1. 인트로 화면
     if st.session_state.mbti_page == "intro":
         st.markdown("""
             <div style='text-align: center; padding-top: 20px;'>
@@ -75,7 +75,7 @@ def run():
 
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # ✅ 2. 퀴즈 페이지
+    # ✅ 2. 퀴즈 화면
     elif st.session_state.mbti_page == "quiz":
         questions = [
             {"question": "Q1. 모임에 초대받았을 때 당신은?", "options": ["A. 좋아! 사람들과 어울리면 에너지가 나요. (E)", "B. 부담돼요. 혼자가 편해요. (I)"]},
@@ -113,7 +113,7 @@ def run():
                 </div>
             """, unsafe_allow_html=True)
 
-            if st.button("선택", key=card_id):  # ✅ label_visibility 제거됨
+            if st.button("선택", key=card_id):
                 st.session_state[selected_key] = option
                 st.session_state.answers.append(option)
                 if current + 1 < total:
@@ -122,7 +122,7 @@ def run():
                     st.session_state.mbti_page = "result"
                 st.rerun()
 
-    # ✅ 3. 결과 페이지
+    # ✅ 3. 결과 화면
     elif st.session_state.mbti_page == "result":
         counts = {c: 0 for c in "EISNTFJP"}
         for ans in st.session_state.answers:
@@ -158,12 +158,21 @@ def run():
 
         burger, label = burger_map[mbti]
 
-        st.subheader("🍔 당신에게 어울리는 버거는 🍔")
-        st.markdown(f"## **{burger}**")
-        st.markdown(f"**성격 유형:** {label}")
-        st.markdown(f"**MBTI 유형:** {mbti}")
+        st.markdown(f"""
+            <div style='text-align: center; padding-top: 30px;'>
+                <h2 style='font-size: 48px;'>🍔 당신에게 어울리는 버거는?</h2>
+                <h1 style='font-size: 56px; color: #FFD700;'>{burger}</h1>
+                <p style='font-size: 22px; margin-top: 10px;'>성격 유형: <b>{label}</b></p>
+                <p style='font-size: 20px;'>MBTI 유형: <b>{mbti}</b></p>
+            </div>
+        """, unsafe_allow_html=True)
 
-        # 영양정보
+        MBTI_IMG_PATH = os.path.join(BASE_DIR, "..", "data", "mbti_images", f"{mbti}.png")
+        if os.path.exists(MBTI_IMG_PATH):
+            st.image(MBTI_IMG_PATH, use_column_width=True, caption=f"{mbti} 타입 이미지")
+        else:
+            st.warning(f"{mbti}에 대한 이미지를 찾을 수 없습니다: {MBTI_IMG_PATH}")
+
         if os.path.exists(CSV_PATH):
             df = pd.read_csv(CSV_PATH)
             df['메뉴'] = df['메뉴'].str.strip()
@@ -172,20 +181,21 @@ def run():
                 st.markdown("### 🍽 영양성분 정보")
                 st.dataframe(menu_data[['단백질', '지방', '나트륨', '당류']])
 
-        if st.button("🔄 다시 테스트하기"):
-            st.session_state.mbti_page = "intro"
-            st.session_state.answers = []
-            for key in list(st.session_state.keys()):
-                if key.startswith("selected_"):
-                    del st.session_state[key]
-            st.rerun()
-            
-                # ✅ 홈으로 돌아가기 버튼
-        if st.button("🏠 홈으로 돌아가기"):
-            st.session_state.page = "home"
-            st.session_state.mbti_page = "intro"
-            st.session_state.answers = []
-            for key in list(st.session_state.keys()):
-                if key.startswith("selected_"):
-                    del st.session_state[key]
-            st.rerun()
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🔄 다시 테스트하기"):
+                st.session_state.mbti_page = "intro"
+                st.session_state.answers = []
+                for key in list(st.session_state.keys()):
+                    if key.startswith("selected_"):
+                        del st.session_state[key]
+                st.rerun()
+        with col2:
+            if st.button("🏠 홈으로 돌아가기"):
+                st.session_state.page = "home"
+                st.session_state.mbti_page = "intro"
+                st.session_state.answers = []
+                for key in list(st.session_state.keys()):
+                    if key.startswith("selected_"):
+                        del st.session_state[key]
+                st.rerun()
