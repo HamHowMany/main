@@ -58,6 +58,9 @@
 # X BitMap
 *.xbm
 
+# .gitignore 예시
+hamhowmany-vote-c37d2626e9be.json
+
 # BMP
 *.bmp
 *.dib
