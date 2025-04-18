@@ -16,14 +16,40 @@ from pages import visual, map_ui, mbti, specialty
 
 # setup_fonts 함수 수정
 def setup_fonts():
+    system = platform.system()
+    font_path = None
+
+    # ✅ 1순위: 프로젝트 내 포함된 NanumGothic
     local_font_path = os.path.join(os.path.dirname(__file__), "assets", "fonts", "NanumGothic.ttf")
     if os.path.exists(local_font_path):
-        prop = fm.FontProperties(fname=local_font_path)
-        plt.rc("font", family=prop.get_name())
-        plt.rcParams["axes.unicode_minus"] = False
-        print(f"✅ 로컬 NanumGothic 적용됨: {prop.get_name()}")
+        font_path = local_font_path
+        print("✅ 로컬 NanumGothic.ttf 사용")
     else:
-        print("❌ 로컬 폰트 파일 없음. 시스템 폰트 사용 시도")
+        # ✅ 2순위: 시스템 폰트 fallback
+        if system == "Windows":
+            font_path = "C:\\Windows\\Fonts\\malgun.ttf"
+        elif system == "Darwin":
+            font_path = "/System/Library/Fonts/AppleGothic.ttf"
+        else:
+            font_path_candidates = [
+                "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",
+                "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+                "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+            ]
+            for path in font_path_candidates:
+                if os.path.exists(path):
+                    font_path = path
+                    print(f"✅ 시스템 폰트 사용: {font_path}")
+                    break
+
+    if font_path and os.path.exists(font_path):
+        font_prop = fm.FontProperties(fname=font_path)
+        plt.rc("font", family=font_prop.get_name())
+        print(f"🎉 적용된 폰트: {font_prop.get_name()}")
+    else:
+        print("❌ 폰트 설정 실패: 기본 폰트 사용 중")
+
+    plt.rcParams["axes.unicode_minus"] = False
 
 
 # ✅ 사이드바 자체 숨기기 (Streamlit 기본 탐색 제거)
