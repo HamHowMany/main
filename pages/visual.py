@@ -31,12 +31,14 @@ def run():
     menu_options = filtered_df['메뉴'].unique()
 
     col1, col2 = st.columns(2)
+
     with col1:
-        st.markdown("👈 왼쪽 메뉴")
-        menu1 = st.selectbox("", menu_options, key="menu1")
+        menu1 = st.selectbox("1번 메뉴", menu_options, key="menu1")
+
     with col2:
-        st.markdown("오른쪽 메뉴 👉")
-        menu2 = st.selectbox("", menu_options, index=1 if len(menu_options) > 1 else 0, key="menu2")
+        menu2 = st.selectbox("2번 메뉴", menu_options, index=1 if len(menu_options) > 1 else 0, key="menu2")
+
+
 
     nutrients = ['칼로리(Kcal)', '단백질', '지방', '나트륨', '당류']
     display_labels = ['칼로리(Kcal)', '단백질 (g)', '지방 (g)', '나트륨 (mg)', '당류 (g)']
