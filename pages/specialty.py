@@ -83,20 +83,22 @@ STYLE = {
 # ─────────────────────────────────────────────────────
 
 def setup_fonts():
-    """운영체제별로 한글 폰트 안전하게 설정"""
     system = platform.system()
     if system == "Windows":
         font_path = "C:\\Windows\\Fonts\\malgun.ttf"
     elif system == "Darwin":
         font_path = "/System/Library/Fonts/AppleGothic.ttf"
-    else:  # Linux (Streamlit Cloud 포함)
-        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    else:
+        # ✅ Linux (Streamlit Cloud) 환경에는 NanumGothic 또는 DejaVuSans 사용
+        font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
+        if not os.path.exists(font_path):
+            font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
     if os.path.exists(font_path):
-        font_prop = fm.FontProperties(fname=font_path)
-        plt.rcParams["font.family"] = font_prop.get_name()
+        prop = fm.FontProperties(fname=font_path)
+        plt.rc("font", family=prop.get_name())
     else:
-        print(f"⚠️ 경고: 지정된 폰트 경로 없음 → {font_path}")
+        print("⚠️ 시스템 폰트를 찾을 수 없습니다. 기본 설정을 사용합니다.")
 
     plt.rcParams["axes.unicode_minus"] = False
 
