@@ -10,8 +10,25 @@ from streamlit_folium import st_folium
 from geopy.distance import distance
 from geopy import Point
 from streamlit_geolocation import streamlit_geolocation
+import platform
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 
+# setup_fonts 함수 수정
+def setup_fonts():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    local_font_path = os.path.join(base_dir, "assets", "fonts", "NanumGothic.ttf")
+
+    if os.path.exists(local_font_path):
+        fm.fontManager.addfont(local_font_path)
+        nanum_font = fm.FontProperties(fname=local_font_path)
+        plt.rcParams['font.family'] = nanum_font.get_name()
+        plt.rcParams["axes.unicode_minus"] = False
+        print(f"✅ matplotlib에 폰트 직접 등록: {nanum_font.get_name()}")
+    else:
+        print("❌ NanumGothic.ttf 경로를 찾을 수 없습니다.")
 def run():
+    setup_fonts()  # ✅ 한글 폰트 깨짐 방지
     # 🔐 환경변수 불러오기
     load_dotenv()
     APP_ID = os.getenv("NUTRITIONIX_APP_ID")
@@ -58,12 +75,8 @@ def run():
     st.markdown(
         """
         <div style='text-align: center; line-height: 1.5; margin-top: 10px;'>
-            <span style='font-size: 40px;'>🍔</span>
             <span style='font-size: 32px; font-weight: 800; margin: 0 6px;'>맥도날드 먹게되면!</span>
-            <span style='font-size: 40px;'>🍔</span><br>
-            <span style='font-size: 40px;'>🏃</span>
             <span style='font-size: 32px; font-weight: 800; margin: 0 6px;'>어디까지 가야할까?</span>
-            <span style='font-size: 40px;'>🏃</span>
         </div>
         """,
         unsafe_allow_html=True
@@ -114,7 +127,8 @@ def run():
 
         # 🧭 방향 선택
         direction_map = {"북쪽 ⬆️": 0, "동쪽 ➡️": 90, "남쪽 ⬇️": 180, "서쪽 ⬅️": 270}
-        bearing = direction_map[st.radio("📌 어느 방향으로 걸어볼까요?", list(direction_map.keys()), horizontal=True)]
+        direction_label = st.radio("📌 어느 방향으로 걸어볼까요?", list(direction_map.keys()), horizontal=True)
+        bearing = direction_map[direction_label]
 
         # 🗺️ 지도 출력
         with st.expander("🗺️ 도보 경로 보기", expanded=False):
@@ -128,6 +142,16 @@ def run():
             if selected_items and burn_per_min and st.session_state.location:
                 required_time = total_kcal / burn_per_min
                 distance_km = speed_kmph * (required_time / 60)
+
+                # 🔥 요약 카드 출력
+                st.markdown("### 📊 칼로리 소모 정보")
+                card1, card2, card3 = st.columns(3)
+                with card1:
+                    st.metric("🍔 총 섭취 칼로리", f"{total_kcal:.0f} Kcal")
+                with card2:
+                    st.metric("🔥 예상 소모 시간", f"{required_time:.1f} 분")
+                with card3:
+                    st.metric("📏 예상 거리", f"{distance_km:.2f} km")
 
                 start = Point(st.session_state.location["latitude"], st.session_state.location["longitude"])
                 end = distance(kilometers=distance_km).destination(start, bearing)
@@ -155,8 +179,8 @@ def run():
                 st_folium(m, width=700, height=500)
             else:
                 st.info("🍴 메뉴를 선택하고 위치를 적용해주세요!")
-                
-     # ✅ 홈으로 돌아가기 버튼
+
+    # ✅ 홈으로 돌아가기 버튼
     st.markdown("---")
     if st.button("🏠 홈으로 돌아가기"):
         st.session_state.page = "home"
