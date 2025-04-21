@@ -8,6 +8,14 @@ import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
 import matplotlib.font_manager as fm
 
+# 메뉴별 이모지 추가
+CATEGORY_EMOJIS = {
+    "버거 & 세트": "🍔",
+    "스낵 & 사이드": "🍟",
+    "디저트": "🍰",
+    "음료": "🥤",
+    "맥모닝 & 세트": "🥪",
+    }
 # ─────────────────────────────────────────────────────
 # 전역 CSS: 카드 hover 효과 + nutrient-text 스타일
 st.markdown("""
@@ -27,6 +35,8 @@ st.markdown("""
     padding: 8px;
     border-radius: 8px;
     margin-left: 16px;
+    margin-top: 24px;
+    margin-bottom: 4px;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -202,7 +212,7 @@ def draw_charts(df_rec: pd.DataFrame):
         ax2.bar_label(cont, fmt="%.1f", label_type="edge", padding=3)
     st.pyplot(fig2)
 
-def render_menu_card(row: pd.Series):
+def render_menu_card(row: pd.Series,emoji: str = "🍔"):
     """햄버거 스타일 메뉴 카드 출력"""
     img_path = os.path.join(
         os.path.dirname(__file__), "..", "data", "menu_images", f"{row['메뉴']}.png"
@@ -210,9 +220,8 @@ def render_menu_card(row: pd.Series):
 
     st.markdown("<div class='menu-card'>", unsafe_allow_html=True)
     st.markdown(f"<div style='{STYLE['category']}'>{row['카테고리']}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div style='{STYLE['menu_name']}'>🍔 {row['메뉴']}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='{STYLE['menu_name']}'>{emoji} {row['메뉴']}</div>", unsafe_allow_html=True)
     st.markdown(f"<div style='{STYLE['patty_top']}'></div>", unsafe_allow_html=True)
-
     cols = st.columns([1.5, 1])
     with cols[0]:
         if os.path.exists(img_path):
@@ -221,11 +230,13 @@ def render_menu_card(row: pd.Series):
             st.warning("❌ 이미지 없음")
     with cols[1]:
         st.markdown(f"""
-            <div class="nutrient-text">
-              <b>칼로리:</b> {row['칼로리(Kcal)']} kcal<br>
-              <b>단백질:</b> {row['단백질']:.1f} g<br>
-              <b>지방:</b> {row['지방']:.1f} g<br>
-              <b>나트륨:</b> {row['나트륨']:.1f} mg
+            <div style='padding-top: 30px;'>
+                <div class="nutrient-text">
+                    <b>칼로리:</b> {row['칼로리(Kcal)']} kcal<br>
+                    <b>단백질:</b> {row['단백질']:.1f} g<br>
+                    <b>지방:</b> {row['지방']:.1f} g<br>
+                    <b>나트륨:</b> {row['나트륨']:.1f} mg
+                </div>
             </div>
         """, unsafe_allow_html=True)
 
@@ -257,15 +268,17 @@ def run():
             for cat, group in recs.groupby("카테고리"):
                 st.markdown(f"### 🍽️ {cat}")
                 for _, row in group.iterrows():
-                    render_menu_card(row)
+                    emoji = CATEGORY_EMOJIS.get(row["카테고리"], "🍔")  # ✅ 이모지 선택
+                    render_menu_card(row, emoji)  # ✅ 이모지 전달
                     st.markdown("---")
             draw_charts(recs)
-            
+
     # ✅ 홈으로 돌아가기 버튼
     st.markdown("---")
     if st.button("🏠 홈으로 돌아가기"):
         st.session_state.page = "home"
         st.rerun()
+
 
 if __name__ == "__main__":
     run()
