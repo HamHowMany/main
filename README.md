@@ -53,6 +53,7 @@ pip install -r requirements.txt
 NUTRITIONIX_APP_ID=your_nutritionix_app_id
 NUTRITIONIX_APP_KEY=your_nutritionix_app_key
 ORS_API_KEY=your_openrouteservice_api_key
+GOOGLE_SERVICE_ACCOUNT_JSON=path/to/your/service_account.json
 ```
 5. 애플리케이션 실행
 ```
