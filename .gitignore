@@ -308,4 +308,10 @@ $RECYCLE.BIN/
 # 테스트코드 폴더
 **/test_code/
 
+# Secret key
+.streamlit/
+
+# .gitignore 예시
+hamhowmany-vote-c37d2626e9be.json
+
 # End of https://www.toptal.com/developers/gitignore/api/python,windows,macos,dotenv,images
