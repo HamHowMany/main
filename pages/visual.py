@@ -15,11 +15,10 @@ SHEET_NAME = "google_vote_result"
 # ✅ Google Sheets 연결
 @st.cache_resource
 def get_gsheet():
-    import json
     from dotenv import load_dotenv
 
     if "GOOGLE_SERVICE_ACCOUNT" in st.secrets:
-        info = json.loads(st.secrets["GOOGLE_SERVICE_ACCOUNT"])
+        info = st.secrets["GOOGLE_SERVICE_ACCOUNT"]  # ✅ json.loads 제거
     else:
         load_dotenv()
         cred_path = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
@@ -37,6 +36,7 @@ def get_gsheet():
     gc = gspread.authorize(credentials)
     sheet = gc.open("google_vote_result").sheet1
     return sheet
+
 
 
 # ✅ 폰트 설정
