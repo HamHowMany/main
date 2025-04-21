@@ -79,8 +79,12 @@ def run():
     setup_fonts()
     df = load_data()
     sheet = get_gsheet()
-
-    st.markdown("<h1 style='text-align:center;'> 메뉴 영양 성분 비교 & 실시간 투표 </h1>", unsafe_allow_html=True)
+# 내 최애 메뉴, 생각보다 짜다고...?
+    st.markdown("<h1 style='text-align:center;'> 메뉴 별 영양성분 비교! </h1>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align:center; color:#888;'>내 최애 메뉴, 생각보다 짜다고...?</p>",
+        unsafe_allow_html=True
+    )
     categories = df['카테고리'].dropna().unique()
     selected_category = st.selectbox("🍽️ 카테고리를 선택하세요", categories)
     filtered_df = df[df['카테고리'] == selected_category]
@@ -110,8 +114,11 @@ def run():
     st.pyplot(fig)
 
     st.markdown("---")
-    st.subheader("🗳️ 마음에 드는 메뉴에 투표하세요!")
-
+    st.subheader("🗳️ 실시간 선호 메뉴 투표!")
+    st.markdown(
+        "<p style='text-align:left; color:#888;'>내 최애 버거, 지금 몇 위일까?</p>",
+        unsafe_allow_html=True
+    )
     if "voted" not in st.session_state:
         st.session_state.voted = []
 
@@ -127,11 +134,11 @@ def run():
             st.success(f"'{selected_vote_menu}'에 투표 완료!")
 
     # ✅ 실시간 투표 집계
-    st.markdown("### 📊 현재 카테고리 투표 현황")
+    st.markdown("### 📊 현재 카테고리 별 투표 현황")
     all_votes = pd.DataFrame(sheet.get_all_records())
     cat_votes = all_votes[all_votes["카테고리"] == selected_category]["메뉴"].value_counts()
     if not cat_votes.empty:
-        draw_vote_chart("현재 카테고리 투표 현황", cat_votes)
+        draw_vote_chart("현재 카테고리 별 투표 현황", cat_votes)
 
     st.markdown("### 🏆 전체 인기 메뉴 TOP 5")
     top5 = all_votes["메뉴"].value_counts().head(5)

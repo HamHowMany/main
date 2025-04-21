@@ -62,7 +62,7 @@ def inject_css():
 
 def show_intro(base_dir: str):
     st.markdown(
-        "<h1 style='text-align:center;'>🍔 나의 <span style='color:#ffcf48;'>McBTI</span>는?</h1>",
+        "<h1 style='text-align:center;'>나의 <span style='color:#ffcf48;'>McBTI</span>는?</h1>",
         unsafe_allow_html=True
     )
     st.markdown(
