@@ -2,14 +2,11 @@ import os
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-import platform
 
-
-# setup_fonts 함수 수정
+# ✅ 폰트 설정
 def setup_fonts():
     base_dir = os.path.dirname(os.path.abspath(__file__))
     local_font_path = os.path.join(base_dir, "assets", "fonts", "NanumGothic.ttf")
-
     if os.path.exists(local_font_path):
         fm.fontManager.addfont(local_font_path)
         nanum_font = fm.FontProperties(fname=local_font_path)
@@ -19,10 +16,9 @@ def setup_fonts():
     else:
         print("❌ NanumGothic.ttf 경로를 찾을 수 없습니다.")
 
-
+# ✅ CSS 삽입
 def inject_css():
-    st.markdown(
-        """
+    st.markdown("""
         <style>
         .option-card {
             padding: 16px;
@@ -56,32 +52,38 @@ def inject_css():
             background-color: #444 !important;
         }
         </style>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
+# ✅ 홈 버튼
+def home_button():
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🏠 홈으로 돌아가기"):
+        st.session_state.page = "home"
+        st.session_state.mbti_page = "intro"
+        st.session_state.answers = []
+        st.session_state.mbti_scores = {c: 0 for c in "EISNTFJP"}
+        for key in list(st.session_state.keys()):
+            if key.startswith("sel_"):
+                del st.session_state[key]
+        st.rerun()
+
+# ✅ intro 페이지
 def show_intro(base_dir: str):
-    st.markdown(
-        "<h1 style='text-align:center;'>나의 <span style='color:#ffcf48;'>McBTI</span>는?</h1>",
-        unsafe_allow_html=True
-    )
-    st.markdown(
-        "<p style='text-align:center; color:#888;'>버거로 알아보는 나의 성격 유형!</p>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<h1 style='text-align:center;'>나의 <span style='color:#ffcf48;'>McBTI</span>는?</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#888;'>버거로 알아보는 나의 성격 유형!</p>", unsafe_allow_html=True)
 
     img_path = os.path.join(base_dir, "..", "data", "burgers.png")
     if os.path.exists(img_path):
         st.image(img_path, use_column_width=True, caption="당신을 기다리는 버거들")
 
-    st.markdown(
-        '<div class="option-card" style="text-align:center;">'
-        '<div style="font-size:40px;">🧠</div>'
-        '<b>McBTI 심리 테스트</b><br>'
-        '심리 유형을 통해 어울리는 버거를 추천받아보세요!'
-        '</div>',
-        unsafe_allow_html=True
-    )
+    st.markdown('''
+        <div class="option-card" style="text-align:center;">
+        <div style="font-size:40px;">🧠</div>
+        <b>McBTI 심리 테스트</b><br>
+        심리 유형을 통해 어울리는 버거를 추천받아보세요!
+        </div>
+    ''', unsafe_allow_html=True)
+
     if st.button("🔥 테스트 시작하기", use_container_width=True):
         st.session_state.mbti_page = "quiz"
         st.session_state.answers = []
@@ -91,6 +93,9 @@ def show_intro(base_dir: str):
                 del st.session_state[key]
         st.rerun()
 
+    home_button()
+
+# ✅ 질문 페이지
 def show_quiz(base_dir: str):
     questions = [
         {"q": "모임에 초대받았을 때 당신은?", "opts": ["A. 좋아! 사람들과 어울리면 에너지가 나요.", "B. 부담돼요. 혼자가 편해요."], "type": "EI"},
@@ -118,24 +123,21 @@ def show_quiz(base_dir: str):
     for i, opt in enumerate(current["opts"]):
         card_cls = "option-card selected" if st.session_state[sel_key] == opt else "option-card"
         btn_id = f"btn_{idx}_{i}"
-        st.markdown(
-            f'<div class="{card_cls}" onclick="document.getElementById(\'{btn_id}\').click()">{opt}</div>',
-            unsafe_allow_html=True
-        )
+        st.markdown(f'<div class="{card_cls}" onclick="document.getElementById(\'{btn_id}\').click()">{opt}</div>', unsafe_allow_html=True)
         if st.button("선택", key=btn_id):
             st.session_state[sel_key] = opt
             st.session_state.answers.append(opt)
-
-            # 선택된 항목에 따라 점수 누적
             mbti_type = current["type"]
             if i == 0:
                 st.session_state.mbti_scores[mbti_type[0]] += 1
             else:
                 st.session_state.mbti_scores[mbti_type[1]] += 1
-
             st.session_state.mbti_page = "quiz" if idx + 1 < len(questions) else "result"
             st.rerun()
 
+    home_button()
+
+# ✅ 결과 페이지
 def show_result(base_dir: str):
     scores = st.session_state.mbti_scores
     mbti = "".join([
@@ -165,7 +167,8 @@ def show_result(base_dir: str):
     }
 
     burger, label = burger_map[mbti]
-    st.markdown("<h2 style='text-align:center;'>🍔당신의 버거 유형은?🍔</h2>", unsafe_allow_html=True)
+
+    st.markdown("<h2 style='text-align:center;'>당신의 버거 유형은?</h2>", unsafe_allow_html=True)
 
     img_path = os.path.join(base_dir, "..", "data", "mbti_images", f"{mbti}.png")
     cols = st.columns([1, 2, 1])
@@ -175,18 +178,21 @@ def show_result(base_dir: str):
 
         st.markdown(f"""
             <div style='text-align:center;'>
-                <h3>🍔<b>{burger}</b>🍔</h3>
+                <h3><b>{burger}</b></h3>
                 <p style='font-size:18px; margin:6px 0;'><b>{mbti}</b></p>
                 <p style='color:#777; font-size:16px;'>{label}</p>
             </div>
         """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-    bcols = st.columns([1, 2, 1])
-    with bcols[1]:
+
+    # ✅ 버튼 중앙 정렬 + 고유 key 부여
+    center_cols = st.columns([1, 2, 1])
+    with center_cols[1]:
         col1, col2 = st.columns(2)
+
         with col1:
-            if st.button("🔄 다시 테스트하기"):
+            if st.button("🔄 다시 테스트하기", key="retry_button"):
                 st.session_state.mbti_page = "intro"
                 st.session_state.answers = []
                 st.session_state.mbti_scores = {c: 0 for c in "EISNTFJP"}
@@ -194,8 +200,9 @@ def show_result(base_dir: str):
                     if key.startswith("sel_"):
                         del st.session_state[key]
                 st.rerun()
+
         with col2:
-            if st.button("🏠 홈으로 돌아가기"):
+            if st.button("🏠 홈으로 돌아가기", key="home_button"):
                 st.session_state.page = "home"
                 st.session_state.mbti_page = "intro"
                 st.session_state.answers = []
@@ -205,6 +212,8 @@ def show_result(base_dir: str):
                         del st.session_state[key]
                 st.rerun()
 
+
+# ✅ 실행 엔트리포인트
 def run():
     setup_fonts()
     inject_css()
