@@ -75,12 +75,8 @@ def run():
     st.markdown(
         """
         <div style='text-align: center; line-height: 1.5; margin-top: 10px;'>
-            <span style='font-size: 40px;'>🍔</span>
             <span style='font-size: 32px; font-weight: 800; margin: 0 6px;'>맥도날드 먹게되면!</span>
-            <span style='font-size: 40px;'>🍔</span><br>
-            <span style='font-size: 40px;'>🏃</span>
             <span style='font-size: 32px; font-weight: 800; margin: 0 6px;'>어디까지 가야할까?</span>
-            <span style='font-size: 40px;'>🏃</span>
         </div>
         """,
         unsafe_allow_html=True
