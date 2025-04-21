@@ -69,7 +69,7 @@ def home_button():
 
 # ✅ intro 페이지
 def show_intro(base_dir: str):
-    st.markdown("<h1 style='text-align:center;'>나의 <span style='color:#ffcf48;'>McBTI</span>는?</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;'>ㅤ나의 <span style='color:#ffcf48;'>McBTI</span>는?</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; color:#888;'>버거로 알아보는 나의 성격 유형!</p>", unsafe_allow_html=True)
 
     img_path = os.path.join(base_dir, "..", "data", "burgers.png")
@@ -148,27 +148,27 @@ def show_result(base_dir: str):
     ])
 
     burger_map = {
-        "INTJ": ("더블 1955 버거", "차갑고 진한 고기맛처럼 계획적"),
-        "INTP": ("트리플 치즈버거", "치즈처럼 말랑하지만 복잡함"),
-        "ENTJ": ("쿼터파운더 치즈", "한 입에 존재감 폭발, 리더맛"),
-        "ENTP": ("슈비 버거", "새우+소고기 조합처럼 상상초월"),
-        "INFJ": ("토마토 치즈 비프 버거", "부드럽고 진지한 속마음 토핑"),
-        "INFP": ("불고기 버거", "달달하고 감성 터지는 맛"),
-        "ENFJ": ("빅맥", "모두 챙기는 층층한 다정함"),
-        "ENFP": ("맥스파이시 상하이 버거", "매콤하고 톡톡 튀는 자유인"),
-        "ISTJ": ("맥치킨", "늘 같은 자리, 기본에 진심"),
-        "ISFJ": ("슈슈 버거", "바삭함 속 따뜻한 배려심"),
-        "ESTJ": ("더블 치즈버거", "정석대로 두 배로 확실하게"),
-        "ESFJ": ("맥크리스피 클래식 버거", "딱 맞는 조합, 모두를 위해"),
-        "ISTP": ("더블 불고기 버거", "조용하지만 실속 가득"),
-        "ISFP": ("치즈버거", "소박하지만 감성 깊은 맛"),
-        "ESTP": ("맥크리스피 디럭스 버거", "바삭! 지금 아니면 못 참음"),
-        "ESFP": ("더블 맥스파이시 상하이 버거", "매운 맛도 즐기는 인싸감성")
+        "INTJ": ("ㅤ더블 1955 버거", "차갑고 진한 고기맛처럼 계획적"),
+        "INTP": ("ㅤ트리플 치즈버거", "치즈처럼 말랑하지만 복잡함"),
+        "ENTJ": ("ㅤ쿼터파운더 치즈", "한 입에 존재감 폭발, 리더맛"),
+        "ENTP": ("ㅤ슈비 버거", "새우+소고기 조합처럼 상상초월"),
+        "INFJ": ("ㅤ토마토 치즈 비프 버거", "부드럽고 진지한 속마음 토핑"),
+        "INFP": ("ㅤ불고기 버거", "달달하고 감성 터지는 맛"),
+        "ENFJ": ("ㅤ빅맥", "모두 챙기는 층층한 다정함"),
+        "ENFP": ("ㅤ맥스파이시 상하이 버거", "매콤하고 톡톡 튀는 자유인"),
+        "ISTJ": ("ㅤ맥치킨", "늘 같은 자리, 기본에 진심"),
+        "ISFJ": ("ㅤ슈슈 버거", "바삭함 속 따뜻한 배려심"),
+        "ESTJ": ("ㅤ더블 치즈버거", "정석대로 두 배로 확실하게"),
+        "ESFJ": ("ㅤ맥크리스피 클래식 버거", "딱 맞는 조합, 모두를 위해"),
+        "ISTP": ("ㅤ더블 불고기 버거", "조용하지만 실속 가득"),
+        "ISFP": ("ㅤ치즈버거", "소박하지만 감성 깊은 맛"),
+        "ESTP": ("ㅤ맥크리스피 디럭스 버거", "바삭! 지금 아니면 못 참음"),
+        "ESFP": ("ㅤ더블 맥스파이시 상하이 버거", "매운 맛도 즐기는 인싸감성")
     }
 
     burger, label = burger_map[mbti]
 
-    st.markdown("<h2 style='text-align:center;'>당신의 버거 유형은?</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>ㅤ당신의 버거 유형은?</h2>", unsafe_allow_html=True)
 
     img_path = os.path.join(base_dir, "..", "data", "mbti_images", f"{mbti}.png")
     cols = st.columns([1, 2, 1])

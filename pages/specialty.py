@@ -236,7 +236,7 @@ def render_menu_card(row: pd.Series):
 
 def run():
     setup_fonts()
-    st.title("지금 나한테 딱 맞는 맥도날드 메뉴는?")
+    st.title("ㅤ지금 내가 원하는 맥도날드 메뉴는?")
     st.markdown(
         "<p style='text-align:center; color:#888;'>버거만 수십 개! 뭐 먹을지 고민된다면?</p>",
         unsafe_allow_html=True

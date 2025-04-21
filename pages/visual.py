@@ -80,7 +80,7 @@ def run():
     df = load_data()
     sheet = get_gsheet()
 # 내 최애 메뉴, 생각보다 짜다고...?
-    st.markdown("<h1 style='text-align:center;'> 메뉴 별 영양성분 비교! </h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;'>ㅤ 메뉴 별 영양성분 비교! </h1>", unsafe_allow_html=True)
     st.markdown(
         "<p style='text-align:center; color:#888;'>내 최애 메뉴, 생각보다 짜다고...?</p>",
         unsafe_allow_html=True

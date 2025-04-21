@@ -94,7 +94,7 @@ def go_to(page_name: str):
 # ✅ 홈 화면
 def show_home():
     st.markdown("""
-    <h1 style="text-align:center; font-size:48px;">🍔 햄최몇? 🍔</h1>
+    <h1 style="text-align:center; font-size:48px;">ㅤ햄최몇..?</h1>
     <p style="text-align:center; font-size:16px;">원하는 기능을 아래 카드에서 선택해보세요!</p>
     """, unsafe_allow_html=True)
 
