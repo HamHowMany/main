@@ -9,16 +9,15 @@ import matplotlib.font_manager as fm
 from google.oauth2 import service_account
 import gspread
 from dotenv import load_dotenv
+from streamlit_autorefresh import st_autorefresh
 
 SHEET_NAME = "google_vote_result"
 
 # ✅ Google Sheets 연결
 @st.cache_resource
 def get_gsheet():
-    from dotenv import load_dotenv
-
     if "GOOGLE_SERVICE_ACCOUNT" in st.secrets:
-        info = st.secrets["GOOGLE_SERVICE_ACCOUNT"]  # ✅ json.loads 제거
+        info = st.secrets["GOOGLE_SERVICE_ACCOUNT"]
     else:
         load_dotenv()
         cred_path = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
@@ -32,12 +31,9 @@ def get_gsheet():
         "https://www.googleapis.com/auth/drive",
     ]
     credentials = service_account.Credentials.from_service_account_info(info, scopes=scopes)
-
     gc = gspread.authorize(credentials)
-    sheet = gc.open("google_vote_result").sheet1
+    sheet = gc.open(SHEET_NAME).sheet1
     return sheet
-
-
 
 # ✅ 폰트 설정
 def setup_fonts():
@@ -56,7 +52,7 @@ def load_data():
     df[['칼로리(Kcal)', '단백질', '지방', '나트륨', '당류']] = df[['칼로리(Kcal)', '단백질', '지방', '나트륨', '당류']].apply(pd.to_numeric, errors='coerce')
     return df
 
-# ✅ 시각화 함수 (bar_chart 개선)
+# ✅ 시각화 함수
 def draw_vote_chart(title, vote_series):
     import matplotlib.cm as cm
     fig, ax = plt.subplots(figsize=(8, 4))
@@ -77,14 +73,15 @@ def draw_vote_chart(title, vote_series):
 # ✅ 실행 함수
 def run():
     setup_fonts()
+    st_autorefresh(interval=30 * 1000, key="auto_refresh")
     df = load_data()
     sheet = get_gsheet()
-# 내 최애 메뉴, 생각보다 짜다고...?
+
+    # ✅ 타이틀
     st.markdown("<h1 style='text-align:center;'>ㅤ 메뉴 별 영양성분 비교! </h1>", unsafe_allow_html=True)
-    st.markdown(
-        "<p style='text-align:center; color:#888;'>내 최애 메뉴, 생각보다 짜다고...?</p>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<p style='text-align:center; color:#888;'>내 최애 메뉴, 생각보다 짜다고...?</p>", unsafe_allow_html=True)
+
+    # ✅ 메뉴 선택
     categories = df['카테고리'].dropna().unique()
     selected_category = st.selectbox("🍽️ 카테고리를 선택하세요", categories)
     filtered_df = df[df['카테고리'] == selected_category]
@@ -96,6 +93,7 @@ def run():
     with col2:
         menu2 = st.selectbox("2번 메뉴", menu_options, index=1, key="menu2")
 
+    # ✅ 영양성분 비교 그래프
     nutrients = ['칼로리(Kcal)', '단백질', '지방', '나트륨', '당류']
     labels = ['칼로리(Kcal)', '단백질 (g)', '지방 (g)', '나트륨 (mg)', '당류 (g)']
     menu1_vals = filtered_df[filtered_df['메뉴'] == menu1][nutrients].values.flatten()
@@ -113,12 +111,11 @@ def run():
     ax.legend()
     st.pyplot(fig)
 
+    # ✅ 투표 인터페이스
     st.markdown("---")
     st.subheader("🗳️ 실시간 선호 메뉴 투표!")
-    st.markdown(
-        "<p style='text-align:left; color:#888;'>내 최애 버거, 지금 몇 위일까?</p>",
-        unsafe_allow_html=True
-    )
+    st.markdown("<p style='text-align:left; color:#888;'>내 최애 버거, 지금 몇 위일까?</p>", unsafe_allow_html=True)
+
     if "voted" not in st.session_state:
         st.session_state.voted = []
 
@@ -133,7 +130,12 @@ def run():
             st.session_state.voted.append(selected_category)
             st.success(f"'{selected_vote_menu}'에 투표 완료!")
 
-    # ✅ 실시간 투표 집계
+    # ✅ 실시간 투표 집계 표시 전 새로고침 섹션
+    st.caption(f"⏰ 마지막 새로고침 시각: {datetime.now().strftime('%H:%M:%S')}")
+    if st.button("🔁 수동 새로고침"):
+        st.rerun()
+
+    # ✅ 실시간 투표 시각화
     st.markdown("### 📊 현재 카테고리 별 투표 현황")
     all_votes = pd.DataFrame(sheet.get_all_records())
     cat_votes = all_votes[all_votes["카테고리"] == selected_category]["메뉴"].value_counts()
@@ -145,6 +147,7 @@ def run():
     if not top5.empty:
         draw_vote_chart("전체 인기 메뉴 TOP 5", top5)
 
+    # ✅ 홈으로 돌아가기
     st.markdown("---")
     if st.button("🏠 홈으로 돌아가기"):
         st.session_state.page = "home"
